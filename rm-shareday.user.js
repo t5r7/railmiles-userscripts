@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         RailMiles Share a Day
 // @namespace    https://tomr.me
-// @version      1.0.0
+// @version      1.0.1
 // @description  Share an entire day's journeys with someone on RailMiles
 // @author       TomR.me
 // @match        https://my.railmiles.me/journeys/list/*
 // @icon         http://www.railmiles.me/assets/img/rm-logo-sm.png
+// @grant        unsafeWindow
 // ==/UserScript==
-
 
 (function() {
     'use strict';
@@ -28,7 +28,7 @@
         dateNum++;
     }
 
-    window.shareDay = function(d) {
+    unsafeWindow.shareDay = function(d) {
         let toShare = new Set();
         const journeyElements = document.querySelectorAll(`*[data-share-date="${d}"] .share-journey`);
 
@@ -51,7 +51,7 @@
         }
     }
 
-    window.shareAJourney = async function(journeyID, username, day, journeyCount, currentJourney) {
+    unsafeWindow.shareAJourney = async function(journeyID, username, day, journeyCount, currentJourney) {
         document.getElementById(`share-status-${day}`).innerText = `Sharing journey ${(parseInt(currentJourney)+1)} of ${journeyCount} with ${username}...`;
 
         const r = await fetch(`/system/social/share?j=${journeyID}&u=${username}`);
