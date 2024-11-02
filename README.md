@@ -7,7 +7,12 @@ Add distances to journeys in kilometres (useful when used with European transit 
 
 ---
 
-## rm-bulk.user.js (RailMiles Bulk Updater)
-Broken! RailMiles no longer allows itself to be embedded in iframes. Previously, would add options for bulk editing journeys.
+## rm-shareday.user.js (Share a Day)
+Share an entire day's journeys with another RailMiles user.
 
-![](https://github.com/itsmeimtom/rm-bulk/assets/14424577/11ca9f1c-25c6-4bdb-a82f-9dc027ba05ef)
+![image](https://github.com/user-attachments/assets/330d28ae-c385-4cbf-a5b6-3f5de82a0d89)
+
+--
+
+## rm-bulk.user.js (Bulk Updater)
+Broken! RailMiles no longer allows itself to be embedded in iframes. Previously, would add options for bulk editing journeys.
