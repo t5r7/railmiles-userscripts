@@ -3,7 +3,7 @@
 ## rm-km.user.js (Kilometres)
 Add distances to journeys in kilometres (useful when used with European transit apps, or routing engines such as [this tool](https://signal.eu.org/osm/) by Pierre Beyssac.
 
-![](https://github.com/user-attachments/assets/04fedbe5-ec03-482a-8ee3-0e36e6f253ca)
+![](https://github.com/user-attachments/assets/98ec6b1f-e91e-45f1-ab2f-c71098f0dff5)
 
 ---
 
