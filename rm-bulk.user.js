@@ -10,6 +10,11 @@
 // @grant        unsafeWindow
 // ==/UserScript==
 
+//
+// THIS NO LONGER WORKS, as of late 2024
+// RailMiles no longer allows itself to be embeddable in iframes, therefore this script cannot function without a major rework.
+//
+
 (function() {
   "use strict";
   console.log("script loaded!");
