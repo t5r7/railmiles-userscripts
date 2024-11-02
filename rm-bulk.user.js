@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Railmiles Bulk Updater (Unofficial)
+// @name         BROKEN: Railmiles Bulk Updater (Unofficial)
 // @namespace    https://tomr.me
-// @version      1.0.5
-// @description  Add the ability to bulk update journeys logged with Railmiles.me
+// @version      1.0.6
+// @description  BROKEN: Add the ability to bulk update journeys logged with Railmiles.me
 // @author       TomR.me
 // @match        https://my.railmiles.me/*
 // @icon         http://www.railmiles.me/assets/img/rm-logo-sm.png
