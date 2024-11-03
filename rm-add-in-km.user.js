@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         RailMiles Kilometres
+// @name         RailMiles Add Distance in Kilometres
 // @namespace    https://tomr.me
-// @version      1.0.0
+// @version      1.0.1
 // @description  Add distances to RailMiles journeys in KM
 // @author       TomR.me
 // @match        https://my.railmiles.me/journeys/rail/edit/*
