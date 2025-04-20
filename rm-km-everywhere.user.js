@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RailMiles Use Kilometres Everywhere
 // @namespace    https://tomr.me
-// @version      1.0.0
+// @version      1.0.1
 // @description  Show distances on RailMiles in KM
 // @author       TomR.me
 // @match        https://*.railmiles.me/
@@ -55,7 +55,7 @@
 
 
         elementsWithMiles.forEach(e => {
-            let plainText = e.innerText;
+            const plainText = e.innerText;
 
             let miles = 0;
             let chains = 0;
@@ -70,17 +70,18 @@
 
             if(miles === 0 && chains === 0) return;
 
-            let totalChains = (miles * 80) + chains;
-            let totalKM = (totalChains * 0.0201168).toFixed(2);
+            const totalChains = (miles * 80) + chains;
+            const totalKM = totalChains * 0.0201168;
+            const totalKMFormatted = totalKM.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
-            let toReplace = (plainText.match(/\d*mi/g).length > 0) ? "mi" : "ch";
-            let toWipe = (toReplace === "mi") ? "ch" : "mi";
+            const toReplace = (plainText.match(/\d*mi/g).length > 0) ? "mi" : "ch";
+            const toWipe = (toReplace === "mi") ? "ch" : "mi";
 
-            let replaceRx = new RegExp(String.raw`\d*${toReplace}`, "g");
-            let wipeRx = new RegExp(String.raw`\d*${toWipe}`, "g");
+            const replaceRx = new RegExp(String.raw`\d*${toReplace}`, "g");
+            const wipeRx = new RegExp(String.raw`\d*${toWipe}`, "g");
 
             e.innerHTML = e.innerHTML.replace(wipeRx, "");
-            e.innerHTML = e.innerHTML.replace(replaceRx, `<span style="font-weight: bold; font-family: monospace;">${totalKM}</span> km`);
+            e.innerHTML = e.innerHTML.replace(replaceRx, `<span style="font-weight: bold; font-family: monospace;">${totalKMFormatted}</span> km`);
         });
     }
 
