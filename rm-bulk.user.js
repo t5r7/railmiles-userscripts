@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         BROKEN: Railmiles Bulk Updater (Unofficial)
+// @name         Railmiles Bulk Updater (Unofficial)
 // @namespace    https://tomr.me
-// @version      1.0.6
-// @description  BROKEN: Add the ability to bulk update journeys logged with Railmiles.me
+// @version      2.0.0
+// @description  Add the ability to bulk update journeys logged with Railmiles.me
 // @author       TomR.me
 // @match        https://my.railmiles.me/*
 // @icon         http://www.railmiles.me/assets/img/rm-logo-sm.png
@@ -10,12 +10,7 @@
 // @grant        unsafeWindow
 // ==/UserScript==
 
-//
-// THIS NO LONGER WORKS, as of late 2024
-// RailMiles no longer allows itself to be embeddable in iframes, therefore this script cannot function without a major rework.
-//
-
-(function() {
+(function () {
   "use strict";
   console.log("script loaded!");
 
@@ -47,9 +42,6 @@
     // check whether we are being invoked from the railmiles site
     if (window.parent.location.hostname.toLowerCase() !== "my.railmiles.me") return alert("RailMiles Bulk Updater:\nYOU SHOULD NEVER SEE THIS. Something has gone wrong, or someone has attempted to execute a CSRF attack.");
 
-    // check if we are in a frame or not
-    if (window == window.parent) return alert("RailMiles Bulk Updater:\nCannot be ran outside of a frame!");
-
     // visuals (scroll into view and make blue)
     formElement.parentElement.style.color = "blue";
     formElement.style.color = "blue";
@@ -60,12 +52,14 @@
     formElement.value = value;
 
     // submit the form after a short delay!
-    const delaySecs = 0;
-    window.setTimeout(function() {
+    const delaySecs = 1;
+    window.setTimeout(function () {
       document.querySelector("form[method=post]").submit();
     }, delaySecs * 1000);
 
-    return; // we are done here (todo: close iframe after a delay?)
+    window.setTimeout(function () {
+      window.close();
+    }, delaySecs * 2000);
   }
 
   // if we have gotten this far, we are not on the page for an individual journey
@@ -77,7 +71,7 @@
   console.log("journey list page!");
 
   // v v hacky
-  window.setTimeout(function() { updateCounters() }, 1000);
+  window.setTimeout(function () { updateCounters() }, 1000);
 
   const journeyElements = document.querySelectorAll(
     ".journey.clearfix:not(.deleted)"
@@ -89,7 +83,6 @@
 
     // for some reason here, e.onclick didn't work
     e.setAttribute("onclick", "this.classList.toggle('bulk-selected'); updateCounters();");
-    if(e.children[2]) e.children[2].innerHTML += `<a href="javascript:showJourneyIframe(${jID});" onclick="this.remove();" style="color: #000; filter: invert(0.5);">edit inline</a>`;
   }
 
   // show the buttons to mess with journeys
@@ -104,10 +97,6 @@
         <button class="aux-butt" onclick="markJourneys('all')">✅ Mark All</button>
         <button class="aux-butt" onclick="markJourneys('none')">❌ Mark None</button>
         <button class="aux-butt" onclick="markJourneys('invert')">🔄 Invert Marked</button>
-
-        <!-- hacky space between buttons -->
-        <span style="display:inline-block;width:2em;"></span>
-        <button class="aux-butt" onclick="closeFrames()">🖼️ Close Frames</button>
 
         <br>
         Mark by Text Match (typing here will clear your currently marked journeys!)
@@ -167,7 +156,7 @@ unsafeWindow.journeyQueue = 0;
 // buffer time is the ms to wait between updating each journey
 unsafeWindow.bufferTime = 1000;
 
-unsafeWindow.bulkUpdateJourneys = function(pushedButton) {
+unsafeWindow.bulkUpdateJourneys = function (pushedButton) {
   if (!pushedButton) return;
 
   const formName = pushedButton.getAttribute("data-form");
@@ -185,36 +174,34 @@ unsafeWindow.bulkUpdateJourneys = function(pushedButton) {
     const jID = j.children[0].getAttribute("journey-id");
 
     // update the journey after a set time
-    window.setTimeout(function() {
-      showJourneyIframe(jID, formName, formValue);
+    window.setTimeout(function () {
+      openJourneyPage(jID, formName, formValue);
     }, unsafeWindow.bufferTime * unsafeWindow.journeyQueue);
   }
 };
 
-unsafeWindow.showJourneyIframe = function(journeyID, formElement, value) {
+unsafeWindow.openJourneyPage = function (journeyID, formElement, value) {
   if (!journeyID) return;
 
   let urlHash = ``;
 
   if (formElement) urlHash = `#${formElement}=${value}`;
 
-  // if there's a previous frame for this journey, remove it before we make another
-  const residualFrame = document.querySelector(`#iframe-${journeyID}`);
-  if (typeof residualFrame != "undefined" && residualFrame != null) residualFrame.remove();
+  // open new window to edit the journey
+  const journeyURL = `https://my.railmiles.me/journeys/edit/${journeyID}${urlHash}`;
+  console.log(`Opening ${journeyURL}`);
+  const newWindow = window.open(journeyURL, "_blank");
+  if (!newWindow) {
+    return alert("RailMiles Bulk Updater:\nPlease allow popups for my.railmiles.me to use this feature.");
+  }
 
-  document.querySelector(
-    `[journey-id="${journeyID}"]`
-  ).parentElement.innerHTML += `
-        <iframe frameBorder="0" id="iframe-${journeyID}" src="https://my.railmiles.me/journeys/edit/${journeyID}${urlHash}" style="width: 100%; height: 300px;"></iframe>
-    `;
-
-  unsafeWindow.setTimeout(function() {
+  unsafeWindow.setTimeout(function () {
     unsafeWindow.journeyQueue--;
     console.log("-", unsafeWindow.journeyQueue);
   }, 2000);
 };
 
-unsafeWindow.markJourneys = function(action, dateNumber) {
+unsafeWindow.markJourneys = function (action, dateNumber) {
   const allJourneys = document.querySelectorAll(
     `${dateNumber ? `#${dateNumber}` : ""} .journey.clearfix:not(.deleted)`
   );
@@ -239,7 +226,7 @@ unsafeWindow.markJourneys = function(action, dateNumber) {
   updateCounters();
 };
 
-unsafeWindow.markByText = function(text) {
+unsafeWindow.markByText = function (text) {
   // first, unmark everything
   markJourneys("none");
 
@@ -261,7 +248,7 @@ unsafeWindow.markByText = function(text) {
   updateCounters();
 };
 
-unsafeWindow.updateCounters = function() {
+unsafeWindow.updateCounters = function () {
   document.getElementById("marked-num").innerText = document.querySelectorAll(
     `.journey.clearfix.bulk-selected:not(.deleted)`
   ).length;
@@ -270,9 +257,6 @@ unsafeWindow.updateCounters = function() {
   ).length;
 };
 
-unsafeWindow.closeFrames = function() {
-  document.querySelectorAll("iframe").forEach((e) => e.remove());
-};
 
 // this is horrible to work in but oh well
 GM_addStyle(`
